@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 // import { use } from 'bcrypt/promises';
-import { User } from '../models';
+import { User, friend } from '../models';
 import checkDuplicateEmail from './userServices';
 
 export const userSignup = async (req, res) => {
@@ -45,6 +45,17 @@ export const userLogin = async (req, res) => {
     res.status(200).send({ message: 'login successfully!', data: user });
   } catch (err) {
     console.log('error in userLogin func>>>>>', err);
+    res.status(400).send(err);
+  }
+};
+export const getUserFriends = async (req, res) => {
+  try {
+    const attributes1 = ['userId'];
+    const data = await User.findAll({ include: { model: friend, as: 'friends', attributes: attributes1 } });
+    console.log('result is>>>>', data);
+    res.status(200).send(data);
+  } catch (err) {
+    console.log('error in getUserFriends func>>>>>', err);
     res.status(400).send(err);
   }
 };
